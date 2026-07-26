@@ -136,7 +136,7 @@ class SettingsStore(context: Context) {
     }
     val wdttLinkMode: Flow<Boolean> = dataStore.data.map { prefs ->
         val profile = prefs[ACTIVE_PROFILE] ?: 0
-        prefs[getProfileKey(WDTT_LINK_MODE, profile)] ?: false
+        prefs[getProfileKey(WDTT_LINK_MODE, profile)] ?: true
     }
 
     val peer: Flow<String> = dataStore.data.map { prefs ->
