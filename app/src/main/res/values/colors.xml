@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#1E1E1E</color>
+    <color name="ic_launcher_background">#14152E</color>
 
     <!-- Google Pixel / Material You Widget Styling - Light Theme fallbacks -->
     <color name="widget_card_background">#FAF8F4</color>
