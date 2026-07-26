@@ -251,7 +251,7 @@ fun MainScreen(
 
     val activeNavItems = remember(wdttLinkMode) {
         if (wdttLinkMode) {
-            navItems.filter { it.id != 1 }
+            navItems.filter { it.id == 0 || it.id == 3 || it.id == 4 }
         } else {
             navItems
         }
@@ -260,7 +260,7 @@ fun MainScreen(
     val projectExpanded = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(wdttLinkMode) {
-        if (wdttLinkMode && selectedTab == 1) {
+        if (wdttLinkMode && (selectedTab == 1 || selectedTab == 2)) {
             selectedTab = 0
         }
     }
