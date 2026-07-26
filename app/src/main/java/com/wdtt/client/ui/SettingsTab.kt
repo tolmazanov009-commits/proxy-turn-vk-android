@@ -403,7 +403,7 @@ fun SettingsTabContent(context: android.content.Context, scope: kotlinx.coroutin
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (!wdttLinkMode) {
+            if (false) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     
                     Text(
@@ -701,35 +701,6 @@ fun SettingsTabContent(context: android.content.Context, scope: kotlinx.coroutin
                                 }
                             }
                         }
-                    }
-
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 4.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                    )
-
-                    
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            "Режим ссылки",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Switch(
-                            checked = wdttLinkMode,
-                            onCheckedChange = { enabled ->
-                                scope.launch {
-                                    settingsStore.saveWdttLinkMode(enabled)
-                                }
-                            }
-                        )
                     }
 
                     if (wdttLinkMode) {
