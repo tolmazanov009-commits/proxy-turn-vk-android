@@ -10,7 +10,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.wdtt.client"
+        applicationId = "com.privategate.client"
         minSdk = 28
         targetSdk = 35
         versionCode = 124
