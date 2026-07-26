@@ -46,6 +46,7 @@ import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -209,6 +210,32 @@ fun InfoTab(
 
         InfoHeroCard(currentVersion = currentVersion, onSupportClick = { showDonateDialog = true })
 
+        AppSectionCard(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                "Private Gate VPN",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                "Быстрый и надёжный доступ в интернет без ограничений. " +
+                    "Все вопросы по подписке, продлению и технической поддержке — в нашем боте.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Button(
+                onClick = { openUrlInBrowser(context, "https://t.me/private_gate_vpn_bot") },
+                modifier = Modifier.fillMaxWidth().height(52.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Send, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Открыть бота @private_gate_vpn_bot", fontWeight = FontWeight.SemiBold)
+            }
+        }
+
         ExpandableSectionCard(
             title = "Действия",
             itemCount = "3 пункта",
@@ -228,21 +255,6 @@ fun InfoTab(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 InfoActionTile(
-                    title = "Поднять вопрос",
-                    subtitle = "Открыть GitHub issue",
-                    modifier = Modifier.weight(1f),
-                    onClick = { openUrlInBrowser(context, IssuesUrl) },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_github),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
-                )
-
-                InfoActionTile(
                     title = "Собрать отчёт",
                     subtitle = "Android, ABI, версия, устройство",
                     modifier = Modifier.weight(1f),
@@ -261,55 +273,6 @@ fun InfoTab(
                     }
                 )
             }
-
-            WideActionTile(
-                title = "Проверить обновления",
-                subtitle = updateStatus,
-                onClick = {
-                    if (isCheckingUpdates) return@WideActionTile
-                    isCheckingUpdates = true
-                    scope.launch {
-                        val checkedAt = System.currentTimeMillis()
-                        val release = fetchLatestReleaseInfo(currentVersion)
-                        val latest = release?.versionTag
-                        settingsStore.saveUpdateState(
-                            lastCheckAt = checkedAt,
-                            latestVersion = latest ?: "",
-                            error = if (release == null) "Не удалось проверить" else ""
-                        )
-                        isCheckingUpdates = false
-
-                        if (release == null) {
-                            val message = if (updateLatestVersion.isNotBlank()) {
-                                "Не удалось проверить. Последняя известная версия: $updateLatestVersion"
-                            } else {
-                                "Не удалось проверить обновления"
-                            }
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                            return@launch
-                        }
-
-                        if (isNewerVersion(currentVersion, release.versionTag)) {
-                            settingsStore.saveUpdateDialogShown(release.versionTag, checkedAt)
-                            pendingManualRelease = release
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "У вас уже последняя версия: ${release.versionTag}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Update,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            )
         }
 
         pendingManualRelease?.let { release ->
@@ -341,63 +304,6 @@ fun InfoTab(
                         )
                         openUrlInBrowser(context, release.releaseUrl)
                     }
-                }
-            )
-        }
-
-        ExpandableSectionCard(
-            title = "О проекте",
-            itemCount = "3 ссылки",
-            expanded = projectExpanded,
-            onToggle = { projectExpanded = !projectExpanded },
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Code,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(18.dp)
-                )
-            }
-        ) {
-            ProjectLinkRow(
-                title = "Автор Android-версии",
-                subtitle = "GitHub профиль amurcanov",
-                onClick = { openUrlInBrowser(context, DeveloperProfileUrl) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            )
-
-            ProjectLinkRow(
-                title = "Репозиторий WDTT",
-                subtitle = "Исходники и релизы приложения",
-                onClick = { openUrlInBrowser(context, RepositoryUrl) },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_github),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            )
-
-            ProjectLinkRow(
-                title = "Актуальные релизы",
-                subtitle = "Страница загрузки APK",
-                onClick = { openUrlInBrowser(context, ReleasesUrl) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Update,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(18.dp)
-                    )
                 }
             )
         }
